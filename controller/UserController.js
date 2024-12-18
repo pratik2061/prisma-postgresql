@@ -50,11 +50,40 @@ export const updateUser = async (req, res) => {
     });
 };
 
+
+
 //show all users
 export const fetchUser= async (req,res)=>{
-    const users = await prisma.user.findMany({})
+    const users = await prisma.user.findMany({
+        //for fetching all the post details user has created.
+
+        include:{
+            post:{
+                select:{
+                    id:true,
+                    title:true,
+                    description:true,
+                    comment_count:true
+                }
+            },
+        },
+
+        //for fetching total amount of post user created......
+
+        // select:{
+        //     _count:{
+        //         select:{
+        //             post:true,
+        //             comment:true
+        //         }
+        //     }
+        // }
+    })
   return res.json({status:200, data:users})
 }
+
+
+
 //show single user
 export const showUser =async (req,res)=>{
     const userId = req.params.id
